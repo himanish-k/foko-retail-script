@@ -7,7 +7,18 @@ const employeeIdRegex = /^[A-Za-z]{1}[\d]{6,}/;
 const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-const inputFileName = "input.txt";
+if (process.argv.length <= 2) {
+    console.error(argsErrorStr);
+    return;
+}
+
+let inputStr = process.argv[2].split("=");
+if (inputStr.length != 2 || inputStr[0] != "--input") {
+    console.error(argsErrorStr);
+    return;
+}
+
+const inputFileName = inputStr[1];
 let readStream;
 try {    
     readStream = fs.createReadStream(inputFileName);
