@@ -2,6 +2,7 @@
 const fs = require("fs");
 const readline = require("readline");
 
+const argsErrorStr = "Error: Expecting argument(s) --input=<input-file> [--output=<output-file>]";
 const plainStrRegex = /^[A-Za-z]*$/;
 const employeeIdRegex = /^[A-Za-z]{1}[\d]{6,}/;
 const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
@@ -19,13 +20,9 @@ if (inputStr.length != 2 || inputStr[0] != "--input") {
 }
 
 const inputFileName = inputStr[1];
-let readStream;
-try {    
-    readStream = fs.createReadStream(inputFileName);
-} catch (err) {
-    console.log(err);
-    return;
-}
+let readStream = fs.createReadStream(inputFileName);
+readStream.on('error', err => console.log(`Unable to read from file "${inputFileName}"`, err));
+
 let readInterface = readline.createInterface({
     input: readStream
 });
