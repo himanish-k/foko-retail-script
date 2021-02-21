@@ -20,6 +20,11 @@ if (inputStr.length != 2 || inputStr[0] != "--input") {
 }
 
 const inputFileName = inputStr[1];
+if (!fs.existsSync(inputFileName, )) {
+    console.log(`File "${inputFileName}" does not exist`);
+    return;
+}
+
 let readStream = fs.createReadStream(inputFileName);
 readStream.on('error', err => console.log(`Unable to read from file "${inputFileName}"`, err));
 
@@ -29,23 +34,45 @@ let readInterface = readline.createInterface({
 
 // let ws = fs.createWriteStream("output.txt");
 let lineCount = 0;
+let validatedData = [];
 readInterface.on('line', (line) => {
     // ws.write(line + EOL);
     ++lineCount;
 
     let columns = line.split(",");
-    if (columns.length == 5) {
+
+    if (columns.length == 5) { // make sure there are at least 5 columns
         const [employeeId, firstName, lastName, phone, email] = columns;
+        let validated = true;
         
-        if (!employeeIdRegex.test(employeeId.trim()))
+        if (!employeeIdRegex.test(employeeId.trim())) {
             console.log(dataFormatErrStr(inputFileName, lineCount, "Employee ID"));
-        if (!plainStrRegex.test(firstName.trim()))
+            validated = false;
+        }
+        if (!plainStrRegex.test(firstName.trim())) {
             console.log(dataFormatErrStr(inputFileName, lineCount, "First Name"));
-        if (!phoneRegex.test(phone.trim()))
+            validated = false;
+        }
+        if (!plainStrRegex.test(lastName.trim())) {
+            console.log(dataFormatErrStr(inputFileName, lineCount, "Last Name"));
+            validated = false;
+        }
+        if (!phoneRegex.test(phone.trim())) {
             console.log(dataFormatErrStr(inputFileName, lineCount, "Phone No."));
-        if (!emailRegex.test(email.trim()))
+            validated = false;
+        }
+        if (!emailRegex.test(email.trim())) {
             console.log(dataFormatErrStr(inputFileName, lineCount, "Email"));
+            validated = false;
+        }
+
+        if (validated)
+            validatedData.push({ employeeId, firstName, lastName, phone, email })
     }
+});
+
+readInterface.on('close', async () => {
+    validatedData.forEach((emp) => console.log(emp));
 });
 
 function dataFormatErrStr(inputFileName, lineCount, fieldName) {
