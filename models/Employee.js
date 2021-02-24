@@ -22,11 +22,7 @@ const EmployeeSchema = new Schema({
   email: {
     type: String,
     required: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
   }
-});
+}, { timestamps: true });
 
 module.exports = Employee = mongoose.model('Employee', EmployeeSchema);
