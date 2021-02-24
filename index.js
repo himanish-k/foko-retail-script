@@ -174,8 +174,7 @@ async function writeToFile(outputFileName, data) {
 
     console.log("--- Writing to file.");
     let writeStream = fs.createWriteStream(outputFileName);
-    let firstEntry = data.shift();
-    writeStream.write(formatEmployeeCsvEntry(firstEntry));
+    writeStream.write("EmployeeID, Fname, Lname, Phone, Date Created, Date Updated");
     for (let entry of data) {
         writeStream.write(`\n${formatEmployeeCsvEntry(entry)}`);
     }

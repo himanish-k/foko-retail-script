@@ -1,5 +1,9 @@
 ## Instructions
 
+Note:
+* Make sure you have Docker installed and running on your computer.
+* Make sure you have Node.js, npm and git installed on your computer.
+
 ### Setup
 * git clone the project repository
 * cd into the project folder
