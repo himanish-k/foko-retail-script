@@ -66,6 +66,8 @@ async function readAndValidateEmployeeData(inputFileName) {
         console.log("--- Reading and validating data.")
         readInterface.on('line', (line) => {
             ++lineCount;
+            if (lineCount === 1)
+                return;
 
             let columns = line.split(",");
 
